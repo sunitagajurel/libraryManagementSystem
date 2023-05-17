@@ -7,7 +7,7 @@ const config = {
     user: process.env.DB_USER,
     password:process.env.PASSWORD,
     server:process.env.SERVER,
-    port:process.env.PORT ,
+    port:1433,
     database: process.env.DATABASE, 
     authentication: {
         type: 'default'
@@ -18,7 +18,6 @@ const config = {
 }
 
 
-
 console.log("Starting...");
 connectAndQuery();
 
@@ -27,11 +26,7 @@ async function connectAndQuery() {
         var poolConnection = await sql.connect(config);
 
         console.log("Reading rows from the Table...");
-        var resultSet = await poolConnection.request().query(`CREATE TABLE dbo.Products
-                (ProductID int PRIMARY KEY NOT NULL,
-                ProductName varchar(25) NOT NULL,
-                Price money NULL,
-                ProductDescription varchar(max) NULL)`);
+        var resultSet = await poolConnection.request().query(`show tables`);
 
         
         poolConnection.close();
