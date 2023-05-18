@@ -8,5 +8,8 @@ cd libraryManagementSystem
 
 npm install 
 
+create .env file with required 
+credentials 
+
 node app.js 
 
