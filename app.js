@@ -1,7 +1,7 @@
 require('dotenv').config()
 const express = require('express')
 const app = express()
-const port = 3001
+const port = 3000
 const path = require('path');
 const bodyParser = require('body-parser');
 const sql = require('mssql');
@@ -28,7 +28,7 @@ app.use(express.static(path.join(__dirname, 'public')));
       const bookId = req.params.bookId;
   
       // Connect to the database
-      await sql.connect(dbConfig);
+      await sql.connect(config);
   
       // Query to fetch a book by ID
       const result = await sql.query(`SELECT * FROM book WHERE bookid = ${bookId}`);
