@@ -1,11 +1,10 @@
+require('dotenv').config()
 const express = require('express')
 const app = express()
 const port = 3001
 const path = require('path');
 const bodyParser = require('body-parser');
 const sql = require('mssql');
-require('dotenv').config()
-
 
 const config = {
     user: process.env.DB_USER,
@@ -21,45 +20,41 @@ const config = {
     }
 }
 
+app.use(express.static(path.join(__dirname, 'public')));
 
-async function connect(query){
+  // Route to fetch a book by ID
+  app.get('/book/:bookId', async (req, res) => {
     try {
-        const conn = await sql.connect(config)
-
-        const result = await conn.request().query(query)
-
-        conn.close()
-
-        return result 
-
+      const bookId = req.params.bookId;
+  
+      // Connect to the database
+      await sql.connect(dbConfig);
+  
+      // Query to fetch a book by ID
+      const result = await sql.query(`SELECT * FROM book WHERE bookid = ${bookId}`);
+  
+      if (result.recordset.length > 0) {
+        // Book found, send the book data as a JSON response
+        res.json({ book: result.recordset[0] });
+      } else {
+        // Book not found
+        res.status(404).send('Book not found');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      res.status(500).send('Internal Server Error');
+    } finally {
+      // Close the database connection
+      await sql.close();
     }
-    catch(err){
-        console.error(err)
-    }
+  });
+  
+  // Serve the HTML file when the root URL is requested
+  app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'library.html'));
+  });
 
-}
-
-app.use(bodyParser.urlencoded({extended: false}));
-app.use(bodyParser.json());
-
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname+'/index.html'))
-})
-
-
-app.post('/search', (req, res) => {
-    query = ``
-    query = `select * from Book_description`
-    // connect(query).then((result)=> {
-    //     result = [{"bookid":1,"bookdesc":"The Hobbit","edition":"First Edition","language":"English                                           ","year":1937,"isbn":"9780007497904","rating":4.2,"genre":"Fantasy"},{"bookid":2,"bookdesc":"Harry Potter and the Philosopher's Stone","edition":"First Edition","language":"English                                           ","year":1997,"isbn":"9780747532699","rating":4.5,"genre":"Fantasy"},{"bookid":3,"bookdesc":"Alice in Wonderland","edition":"Revised Edition","language":"English                                           ","year":1865,"isbn":"9781503290283","rating":4.1,"genre":"Fantasy"},{"bookid":4,"bookdesc":"The Chronicles of Narnia","edition":"Complete Collection","language":"English                                           ","year":1950,"isbn":"9780064404990","rating":4.6,"genre":"Fantasy"},{"bookid":5,"bookdesc":"Pride and Prejudice","edition":"Revised Edition","language":"English                                           ","year":1813,"isbn":"9780141439518","rating":4.7,"genre":"Classic"},{"bookid":6,"bookdesc":"To Kill a Mockingbird","edition":"First Edition","language":"English                                           ","year":1960,"isbn":"9780062420701","rating":4.5,"genre":"Fiction"},{"bookid":7,"bookdesc":"The Great Gatsby","edition":"First Edition","language":"English                                           ","year":1925,"isbn":"9780743273565","rating":4.2,"genre":"Classic"},{"bookid":8,"bookdesc":"1984","edition":"Revised Edition","language":"English                                           ","year":1949,"isbn":"9780451524935","rating":4.3,"genre":"Dystopian"},{"bookid":9,"bookdesc":"The Catcher in the Rye","edition":"First Edition","language":"English                                           ","year":1951,"isbn":"9780316769488","rating":4,"genre":"Fiction"},{"bookid":10,"bookdesc":"Moby-Dick","edition":"Revised Edition","language":"English                                           ","year":1851,"isbn":"9781503280789","rating":4.4,"genre":"Adventure"}]
-    //     res.send(result.recordset);
-    // })
-    result = [{"bookid":1,"bookdesc":"The Hobbit","edition":"First Edition","language":"English                                           ","year":1937,"isbn":"9780007497904","rating":4.2,"genre":"Fantasy"},{"bookid":2,"bookdesc":"Harry Potter and the Philosopher's Stone","edition":"First Edition","language":"English                                           ","year":1997,"isbn":"9780747532699","rating":4.5,"genre":"Fantasy"},{"bookid":3,"bookdesc":"Alice in Wonderland","edition":"Revised Edition","language":"English                                           ","year":1865,"isbn":"9781503290283","rating":4.1,"genre":"Fantasy"},{"bookid":4,"bookdesc":"The Chronicles of Narnia","edition":"Complete Collection","language":"English                                           ","year":1950,"isbn":"9780064404990","rating":4.6,"genre":"Fantasy"},{"bookid":5,"bookdesc":"Pride and Prejudice","edition":"Revised Edition","language":"English                                           ","year":1813,"isbn":"9780141439518","rating":4.7,"genre":"Classic"},{"bookid":6,"bookdesc":"To Kill a Mockingbird","edition":"First Edition","language":"English                                           ","year":1960,"isbn":"9780062420701","rating":4.5,"genre":"Fiction"},{"bookid":7,"bookdesc":"The Great Gatsby","edition":"First Edition","language":"English                                           ","year":1925,"isbn":"9780743273565","rating":4.2,"genre":"Classic"},{"bookid":8,"bookdesc":"1984","edition":"Revised Edition","language":"English                                           ","year":1949,"isbn":"9780451524935","rating":4.3,"genre":"Dystopian"},{"bookid":9,"bookdesc":"The Catcher in the Rye","edition":"First Edition","language":"English                                           ","year":1951,"isbn":"9780316769488","rating":4,"genre":"Fiction"},{"bookid":10,"bookdesc":"Moby-Dick","edition":"Revised Edition","language":"English                                           ","year":1851,"isbn":"9781503280789","rating":4.4,"genre":"Adventure"}]
-    res.send(result);
-
-    
-})
-
-app.listen(port, () => {
-  console.log(`app is listening on port ${port}`)
-})
+  // Start the server
+  app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
+  });
