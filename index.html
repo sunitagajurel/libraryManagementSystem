@@ -2,6 +2,7 @@
 <html>
 <head>
   <title>Universal Library</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <style>
     /* CSS styles for the library website */
     body {
@@ -96,27 +97,62 @@
 
   <main>
     <div class="search-box">
-      <form action="results.html" method="get">
-        <input type="text" name="bookname" placeholder="Book Name">
-        <input type="text" name="author" placeholder="Author">
-        <select name="genre">
-          <option value="">Genre</option>
-          <option value="fantasy">Fantasy</option>
-          <option value="mystery">Mystery</option>
-          <option value="romance">Romance</option>
-          <option value="sci-fi">Sci-Fi</option>
-        </select>
-        <input type="submit" value="Search">
-      </form>
+      <input type="text" name="bookname" placeholder="Book Name" id="bookname">
+      <input type="text" name="author" placeholder="Author" id="author">
+      <select name="genre" id="genre">
+        <option value="">Genre</option>
+        <option value="fantasy">Fantasy</option>
+        <option value="mystery">Mystery</option>
+        <option value="romance">Romance</option>
+        <option value="sci-fi">Sci-Fi</option>
+      </select>
+      <input type="submit" value="Search" id="searchBtn">
+    </div>
+    <div class="result-box" id="resultContainer">
     </div>
   </main>
 
-<script>
-  document.getElementById("searchButton").addEventListener("click", function() {
-    window.location.href = "file:///Users/dasha/Desktop/Libarry%201.html";
-  });
-</script>
+  <script>
+    // Handle search button click event
+    $(document).ready(() => {
+      $('#searchBtn').click(() => {
+        console.log('Button clicked');
+        const bookName = $('#bookname').val();
+        const author = $('#author').val();
+        const genre = $('#genre').val();
+        searchBooks(bookName, author, genre);
+      });
 
+      function searchBooks(bookName, author, genre) {
+        console.log('Search book with name:' + bookName + author + genre);
+        $('#resultContainer').empty();
+        $.ajax({
+          url: `/search`,
+          method: 'GET',
+          data: { 
+            "bookName": bookName, 
+            "author": author, 
+            "genre": genre
+          },
+          success: function(response) {
+            var books = response;
+            var bookHtml = '<h2>Book Details:</h2>';
+            for (let i = 0; i < books.length; i++) {
+                bookHtml += '<h3>Title: ' + books[i].bookName + '</h3>';
+                bookHtml += '<p>Author: ' + books[i].author + '</p>';
+                bookHtml += '<p>Genre: ' + books[i].genre + '</p>';
+                bookHtml += '<p>Rating: ' + books[i].rating + '</p>';
+                bookHtml += '<button>Borrow</button><button>Return</button>'
+            }
+            $('#resultContainer').html(bookHtml);
+          },
+          error: function(xhr, status, error) {
+            console.error('Error:', error);
+          }
+        });
+      }
+    });
+  </script>
 
 
     <h2>Featured Books</h2>
@@ -128,20 +164,21 @@
   </style>
 </head>
 <body>
-  <h3>The Lord of the Rings</h3>
-      <p>Author: J.R.R. Tolkien</p>
-      <p>Description: The Lord of the Rings" is a classic fantasy novel that takes readers on an epic journey through the enchanting world of Middle-earth. With meticulous world-building and a captivating narrative, J.R.R. Tolkien weaves a tale of adventure, heroism, and the timeless struggle between good and evil.</p>
+  <div>
+    <h3>The Lord of the Rings</h3>
+    <p>Author: J.R.R. Tolkien</p>
+    <p>Description: The Lord of the Rings" is a classic fantasy novel that takes readers on an epic journey through the enchanting world of Middle-earth. With meticulous world-building and a captivating narrative, J.R.R. Tolkien weaves a tale of adventure, heroism, and the timeless struggle between good and evil.</p>
 <img src="33.jpg" width="300" height="450">
-      <button>Borrow</button>
-      <button>Return</button>
-    </div>
-      <div>
-      <h3>Moby-Dick</h3>
-      <p>Author: Herman Melville</p>
-      <p>Description: "Moby-Dick" is a literary masterpiece that explores the depths of obsession, fate, and the relentless pursuit of an elusive white whale. Herman Melville's novel takes readers on a captivating journey aboard the whaling ship Pequod, led by the enigmatic Captain Ahab.</p>
-      <button>Borrow</button>
-      <button>Return</button>
-    </div>
+    <button>Borrow</button>
+    <button>Return</button>
+  </div>
+  <div>
+    <h3>Moby-Dick</h3>
+    <p>Author: Herman Melville</p>
+    <p>Description: "Moby-Dick" is a literary masterpiece that explores the depths of obsession, fate, and the relentless pursuit of an elusive white whale. Herman Melville's novel takes readers on a captivating journey aboard the whaling ship Pequod, led by the enigmatic Captain Ahab.</p>
+    <button>Borrow</button>
+    <button>Return</button>
+  </div>
 <img src="44.jpg" width="300" height="450">
 </body>
 

@@ -171,6 +171,45 @@ app.use(express.static(path.join(__dirname, 'public')));
   });
 
 
+    // Route to fetch a book by ID
+    app.get('/search', async (req, res) => {
+      try {
+        const bookName = req.query.bookName;
+        const author = req.query.author;
+        const genre = req.query.genre;
+
+        let query = 'SELECT * FROM book WHERE 1=1';
+        if(bookName) {
+          query = query + ` and bookName = '${bookName}'`;
+        }
+
+        if(author) {
+          query = query + ` and author = '${author}'`;
+        }
+
+        if(genre) {
+          query = query + ` and genre = '${genre}'`;
+        }
+    
+        // Connect to the database
+        await sql.connect(config);
+    
+        console.log(query)
+        // Query to fetch a book by ID
+        const result = await sql.query(query);
+    
+        if (result.recordset.length > 0) {
+          // Book found, send the book data as a JSON response
+          res.json(result.recordset);
+        } 
+      } catch (error) {
+        console.error('Error:', error);
+        res.status(500).send('Internal Server Error');
+      } finally {
+        // Close the database connection
+        await sql.close();
+      }
+    });
   
 
  // Serve the HTML file when the root URL is requested
