@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Universal Library</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <link rel = "stylesheet" type="text/css" href="style.css">  
+</head>
+<body>
+  <header>
+    <h1>Welcome to the Universal Library</h1>
+  </header>
+
+  <nav>
+    <ul>
+      <li><a href="#">Home</a></li>
+      <li><a href="#">Books</a></li>
+      <li><a href="#">Magazines</a></li>
+      <li > OutofStock </li>
+      <li onclick="openForm()">ReturnBook</li>
+    </ul>
+  </nav>
+
+  </style>
+</head>
+<body>
+  <main>
+    <div class="search-box">
+      <input type="text" name="bookname" placeholder="Book Name" id="bookname">
+      <input type="text" name="author" placeholder="Author" id="author">
+      <select name="genre" id="genre">
+          <option value="">genre</option>
+          <!-- <option value="fantasy">Fantasy</option> -->
+          <option value="Fiction">Fiction </option>
+          <option value="Adventure">Adventure</option>
+          <option value="Classic">Classic</option>
+          <option value="Fantasy">Fantasy</option>
+          <option value="Fantasy">Dystopian</option>
+      </select>
+      <input type="submit" value="Search" id="searchBtn">
+    </div>
+    <div class="result-box" id="resultContainer">
+    </div>
+  </main>
+
+  <div class = "form-popup" id = "return-form"> 
+    <form  action = "/return"  method ="post" class = "form-container"> 
+      <h1 class="ret-header"> Return Book </h1>
+      <label for = "tid">
+        <input type = "text" placeholder = "Enter transaction" name="tid" - required> 
+      </label>
+      <label for = "bid">
+        <input type = "text" placeholder = "Enter Bookid" name = "bid" required> 
+      </label>
+      <button type = "submit" class = "btn " id = "ret-btn" > Return</button>
+      <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
+  </form>
+  </div>
+
+  <h2>Stock Books </h2>
+  <div  id = "stockBooks">
+
+    
+  </div>
+  <footer>
+    <p>&copy; 2023 Universal Library. Prepared by <i> DARIYA  DIVYA  SUNITA </i></p>
+  </footer>
+
+  <script>
+    // Handle search button click event
+    function openForm() {
+    document.getElementById("return-form").style.display = "block";
+    
+   }
+
+    function closeForm() {
+      document.getElementById("return-form").style.display = "none";
+    }
+    
+    $(document).ready(() => {
+      $('#searchBtn').click(() => {
+        console.log('Button clicked');
+        const bookName = $('#bookname').val();
+        const author = $('#author').val();
+        const genre = $('#genre').val();
+        searchBooks(bookName, author, genre);
+      });
+
+    
+      $('#resultContainer').on('click', '.brw', function() {
+        const bookId = $(this).closest('div.book').data('book-id');
+        Authorise(parseInt(bookId));
+      });
+
+      function searchBooks(bookName, author, genre) {
+        console.log('Search book with name:' + bookName + author + genre);
+        $('#resultContainer').empty();
+        $.ajax({
+          url: `/search`,
+          method: 'GET',
+          data: { 
+            "bookName": bookName, 
+            "author": author, 
+            "genre": genre
+          },
+          success: function(response) {
+            if(response ==="book not found"){
+              var bookHtml =  " <h1> Sorry No books found </h1>"
+            }
+            else{
+              var books = response;
+              var bookHtml = '<h2>Book Details:</h2>';
+              for (let i = 0; i < books.length; i++) {
+                  bookHtml += '<div class="book" data-book-id="' + books[i].bookid + '">';
+                  bookHtml += '<h3>Title: ' + books[i].bookName + '</h3>';
+                  bookHtml += '<p>Author: ' + books[i].author + '</p>';
+                  bookHtml += '<p>Genre: ' + books[i].genre + '</p>';
+                  bookHtml += '<p>Rating: ' + books[i].rating + '</p>';
+                  bookHtml += `<button  class="brw">Borrow</button><button>Return</button>  </div> `;
+              }
+            }
+            
+            $('#resultContainer').html(bookHtml);
+          },
+          error: function(xhr, status, error) {
+            console.error('Error:', error);
+          }
+        });
+
+
+        $('#brr').click(() => {
+        console.log('Button clicked');
+        const bookName = $('#bookname').val();
+        const author = $('#author').val();
+        const genre = $('#genre').val();
+        searchBooks(bookName, author, genre);
+      });
+
+      }
+
+      function Authorise(bookId){
+        console.log(bookId)
+           //check for stid 
+           const uid = 2 
+
+           $.ajax({
+          url: `/burrow`,
+          method: 'GET',
+          data: { 
+            "uId": uid, 
+            "bookId":bookId
+          },
+          success: function(response) {
+            alert(response)
+          }
+        
+      })
+      }
+    })
+    
+  </script>
+ 
+</body>
+</html>

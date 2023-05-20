@@ -287,6 +287,9 @@ app.use(bodyParser.urlencoded({extended: false}));
             console.log(result.recordset)
             res.json(result.recordset);
           }
+          else{
+            res.send("book not found");
+          }
 
         });
       } catch (error) {
