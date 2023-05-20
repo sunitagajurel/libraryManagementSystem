@@ -65,6 +65,60 @@
       cursor: pointer;
     }
 
+    /* styles for popup  */
+
+
+
+/* The popup form - hidden by default */
+.form-popup {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 3px solid #f1f1f1;
+  z-index: 9;
+  
+}
+
+/* Add styles to the form container */
+.form-container {
+  max-width: 500px;
+  padding: 10px;
+  background-color: white;
+}
+
+/* Full-width input fields */
+.form-container input[type=text], .form-container input[type=text] {
+  width: 95%;
+  padding: 15px;
+  margin: 5px 0 22px 0;
+  border: none;
+  background: #f1f1f1;
+}
+
+/* When the inputs get focus, do something */
+.form-container input[type=text]:focus, .form-container input[type=text]:focus {
+  background-color: #ddd;
+  outline: none;
+}
+
+/* Set a style for the submit/login button */
+.form-container .btn {
+  background-color: #04AA6D;
+  color: white;
+  padding: 16px 20px;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  margin-bottom:10px;
+  opacity: 0.8;
+}
+.blurred {
+  filter: blur(5px);
+}
+
+
     footer {
       background-color: #333;
       color: #fff;
@@ -84,7 +138,7 @@
       <li><a href="#">Books</a></li>
       <li><a href="#">Magazines</a></li>
       <li><a href="#">Events</a></li>
-      <li><a href="#">Contact</a></li>
+      <li onclick="openForm()">ReturnBook</li>
     </ul>
   </nav>
 
@@ -100,11 +154,15 @@
       <input type="text" name="bookname" placeholder="Book Name" id="bookname">
       <input type="text" name="author" placeholder="Author" id="author">
       <select name="genre" id="genre">
-        <option value="">Genre</option>
-        <option value="fantasy">Fantasy</option>
-        <option value="mystery">Mystery</option>
-        <option value="romance">Romance</option>
-        <option value="sci-fi">Sci-Fi</option>
+        <option value="">genre</option>
+        <!-- <option value="fantasy">Fantasy</option> -->
+        <option value="Fiction">Fiction </option>
+        <option value="Adventure">Adventure</option>
+        <option value="Classic">Classic</option>
+        <option value="Fantasy">Fantasy</option>
+        <option value="Fantasy">Dystopian</option>
+        
+
       </select>
       <input type="submit" value="Search" id="searchBtn">
     </div>
@@ -112,8 +170,34 @@
     </div>
   </main>
 
+  <div class = "form-popup" id = "return-form"> 
+    <form  action = "/return"  method ="post" class = "form-container"> 
+      <h1> return Book </h1>
+      <label for = "tid">
+        <input type = "text" placeholder = "Enter transaction" name="tid" - required> 
+      </label>
+      <label for = "bid">
+        <input type = "text" placeholder = "Enter Bookid" name = "bid" required> 
+      </label>
+      <button type = "submit" class = "btn " id = "ret-btn" > Return</button>
+      <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
+  </form>
+
+    </form>
+  </div>
+
   <script>
     // Handle search button click event
+    function openForm() {
+    document.getElementById("return-form").style.display = "block";
+    
+   }
+
+    function closeForm() {
+
+      document.getElementById("return-form").style.display = "none";
+    }
+    
     $(document).ready(() => {
       $('#searchBtn').click(() => {
         console.log('Button clicked');
@@ -122,6 +206,16 @@
         const genre = $('#genre').val();
         searchBooks(bookName, author, genre);
       });
+
+    
+  $('#resultContainer').on('click', '.brw', function() {
+    console.log('Borrow button clicked');
+    const bookId = $(this).closest('div.book').data('book-id');
+    Authorise(parseInt(bookId));
+  });
+
+  
+
 
       function searchBooks(bookName, author, genre) {
         console.log('Search book with name:' + bookName + author + genre);
@@ -138,11 +232,12 @@
             var books = response;
             var bookHtml = '<h2>Book Details:</h2>';
             for (let i = 0; i < books.length; i++) {
+                bookHtml += '<div class="book" data-book-id="' + books[i].bookid + '">';
                 bookHtml += '<h3>Title: ' + books[i].bookName + '</h3>';
                 bookHtml += '<p>Author: ' + books[i].author + '</p>';
                 bookHtml += '<p>Genre: ' + books[i].genre + '</p>';
                 bookHtml += '<p>Rating: ' + books[i].rating + '</p>';
-                bookHtml += '<button>Borrow</button><button>Return</button>'
+                bookHtml += `<button  class="brw">Borrow</button><button>Return</button>  </div> `;
             }
             $('#resultContainer').html(bookHtml);
           },
@@ -150,8 +245,38 @@
             console.error('Error:', error);
           }
         });
+
+
+        $('#brr').click(() => {
+        console.log('Button clicked');
+        const bookName = $('#bookname').val();
+        const author = $('#author').val();
+        const genre = $('#genre').val();
+        searchBooks(bookName, author, genre);
+      });
+
       }
-    });
+
+      function Authorise(bookId){
+        console.log(bookId)
+           //check for stid 
+           const uid = 2 
+
+           $.ajax({
+          url: `/burrow`,
+          method: 'GET',
+          data: { 
+            "uId": uid, 
+            "bookId":bookId
+          },
+          success: function(response) {
+            alert(response)
+          }
+        
+      })
+      }
+    })
+    
   </script>
 
 
