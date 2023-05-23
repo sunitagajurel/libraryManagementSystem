@@ -34,7 +34,7 @@
           <option value="Adventure">Adventure</option>
           <option value="Classic">Classic</option>
           <option value="Fantasy">Fantasy</option>
-          <option value="Fantasy">Dystopian</option>
+          <option value="Dystopian">Dystopian</option>
       </select>
       <input type="submit" value="Search" id="searchBtn">
     </div>
@@ -56,27 +56,50 @@
   </form>
   </div>
 
-  <h2>Stock Books </h2>
-  <div  id = "stockBooks">
 
-    
+  <div class = "form-popup" id = "borrow-form"> 
+    <form class = "form-container"> 
+      <h1 class="ret-header"> Borrow Book </h1>
+      <label for = "uid">
+        <input type = "text" placeholder = "Enter your Id" id = "uid" name="uid" - required> 
+      </label>
+      <button type = "button" class = "btn" id = "brrBtn" > Borrow</button>
+      <button type="button" class="btn cancel" onclick="closeBrrForm()">Close</button>
+  </form>
   </div>
+
+
   <footer>
     <p>&copy; 2023 Universal Library. Prepared by <i> DARIYA  DIVYA  SUNITA </i></p>
   </footer>
 
   <script>
-    // Handle search button click event
-    function openForm() {
-    document.getElementById("return-form").style.display = "block";
-    
+    //keeps track of clicked bookId 
+    bookId = null
+
+    //opens the popup for borrowing 
+    function openBrrForm(bookId) {
+      document.getElementById("borrow-form").style.display = "block"; 
    }
 
+    //close the popup for borrowing 
+    function closeBrrForm() {
+      document.getElementById("borrow-form").style.display = "none";
+    }
+
+    //open  the popup for returning 
+    function openForm() {
+    document.getElementById("return-form").style.display = "block";
+   }
+
+   //close the popup for returning
     function closeForm() {
       document.getElementById("return-form").style.display = "none";
     }
-    
+
+    //jquery starts here
     $(document).ready(() => {
+      //handles search function 
       $('#searchBtn').click(() => {
         console.log('Button clicked');
         const bookName = $('#bookname').val();
@@ -85,10 +108,17 @@
         searchBooks(bookName, author, genre);
       });
 
-    
+      //called when burrow button is called on popup
+      $('#brrBtn').click(() => {
+        const uId = parseInt($('#uid').val());
+        Authorise(bookId,uId)
+      });
+
+      //called when burrow button is called from bookList
       $('#resultContainer').on('click', '.brw', function() {
-        const bookId = $(this).closest('div.book').data('book-id');
-        Authorise(parseInt(bookId));
+       
+        bookId = $(this).closest('div.book').data('book-id');
+        openBrrForm()
       });
 
       function searchBooks(bookName, author, genre) {
@@ -103,6 +133,7 @@
             "genre": genre
           },
           success: function(response) {
+            //handles empty search 
             if(response ==="book not found"){
               var bookHtml =  " <h1> Sorry No books found </h1>"
             }
@@ -115,7 +146,7 @@
                   bookHtml += '<p>Author: ' + books[i].author + '</p>';
                   bookHtml += '<p>Genre: ' + books[i].genre + '</p>';
                   bookHtml += '<p>Rating: ' + books[i].rating + '</p>';
-                  bookHtml += `<button  class="brw">Borrow</button><button>Return</button>  </div> `;
+                  bookHtml += `<button  class="brw">Borrow </button> </div> `;
               }
             }
             
@@ -125,31 +156,21 @@
             console.error('Error:', error);
           }
         });
-
-
-        $('#brr').click(() => {
-        console.log('Button clicked');
-        const bookName = $('#bookname').val();
-        const author = $('#author').val();
-        const genre = $('#genre').val();
-        searchBooks(bookName, author, genre);
-      });
-
       }
 
-      function Authorise(bookId){
-        console.log(bookId)
-           //check for stid 
-           const uid = 2 
+      function Authorise(bookId,uId){
+        console.log(bookId,uId)
+        closeBrrForm()
 
            $.ajax({
-          url: `/burrow`,
+          url: `/borrow`,
           method: 'GET',
           data: { 
-            "uId": uid, 
+            "uId": uId, 
             "bookId":bookId
           },
           success: function(response) {
+
             alert(response)
           }
         
