@@ -21,6 +21,7 @@ const config = {
 }
 
 app.use(express.static(path.join(__dirname, 'public')));
+
 app.use(bodyParser.urlencoded({extended: false}));
 
   // Route to fetch a book by ID
@@ -57,11 +58,13 @@ app.use(bodyParser.urlencoded({extended: false}));
     try {
       const uId = req.query.uId;
       const bookId = req.query.bookId;
-      console.log(uId)
+      console.log(uId,bookId)
       var pool = await sql.connect(config)
 
       // checks the availability of the book 
-      const booksqty = await pool.request().query(`SELECT dbo.BookExists(${bookId})`)
+      const query = `SELECT dbo.BookExists(${bookId})`
+      console.log(query) 
+      const booksqty = await pool.request().input('bookid',sql.VARCHAR(30),bookId).query(`SELECT dbo.BookExists(@bookid)`)
       const book = booksqty .recordset[0]
       const bookExists= Object.values(book)[0]
 
@@ -81,15 +84,17 @@ app.use(bodyParser.urlencoded({extended: false}));
             await transaction.begin()
             try {
                 // creating the transaction 
-                await transaction.request().input('borrowdate', sql.Date,currentDate)
+                await transaction.request().input('bookid',sql.VARCHAR(30),bookId).input('borrowdate', sql.Date,currentDate)
                 .input('duedate', sql.Date,dueDate).input('returndate',sql.Date, null).query(`
                   INSERT INTO Action (bookid, personid, borrowdate, duedate, returndate)
-                  VALUES (${bookId},${uId},@borrowdate, @duedate ,@returndate)
+                  VALUES (@bookid,${uId},@borrowdate, @duedate ,@returndate)
                 `);
 
+                console.log("transaction -inserted")
+
                 // reducing the number of book 
-                await transaction.request().query(`
-                UPDATE Book SET quantity = quantity - 1 WHERE bookid = ${bookId}
+                await transaction.request().input('bookid',sql.VARCHAR(30),bookId).query(`
+                UPDATE Book SET quantity = quantity - 1 WHERE bookid = @bookid
               `);
                 //getting the transaction detail 
                 const getTransactionId= await transaction.request().query(`
@@ -135,8 +140,8 @@ app.use(bodyParser.urlencoded({extended: false}));
       var pool = await sql.connect(config);
 
       // check if the person is authorised 
-      const result = await pool.request().query(`
-      SELECT * from action where transactionId= ${tId} and bookid = ${bookId} and returndate is NULL`)
+      const result = await pool.request().input('bookid',sql.VARCHAR(30),bookId).query(`
+      SELECT * from action where transactionId= ${tId} and bookid = @bookid and returndate is NULL`)
 
       console.log(result)
       
@@ -152,12 +157,12 @@ app.use(bodyParser.urlencoded({extended: false}));
               console.log("updating transaction")
             
             // update  the  quantity
-            await transaction.request().query(
-                `UPDATE Book SET quantity = quantity + 1 WHERE bookid = ${bookId}`)
+            await transaction.request().input('bookid',sql.VARCHAR(30),bookId).query(
+                `UPDATE Book SET quantity = quantity + 1 WHERE bookid = @bookid`)
 
               //commiting the transaction
             await transaction.commit()
-            res.send("book returned")
+            res.send("book returned successfully")
 
           }
         catch(err){
@@ -175,6 +180,7 @@ app.use(bodyParser.urlencoded({extended: false}));
       res.status(500).send('Internal Server Error');
     } finally {
       // Close the database connection
+      
       await pool.close();
     }
   });
