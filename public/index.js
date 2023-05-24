@@ -1,4 +1,8 @@
 
+
+function onPageLoad(){
+    searchBooks()
+}
 //keeps track of clicked bookId 
 bookId = null
 
@@ -24,6 +28,7 @@ function closeForm() {
 
 //jquery starts here
 $(document).ready(() => {
+    window.onload = searchBooks();
   //handles search function 
   $('#searchBtn').click(() => {
     console.log('Button clicked');
@@ -102,3 +107,5 @@ $(document).ready(() => {
   })
   }
 })
+
+
