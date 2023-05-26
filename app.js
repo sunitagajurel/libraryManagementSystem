@@ -85,9 +85,9 @@ app.use(bodyParser.urlencoded({extended: false}));
             try {
                 // creating the transaction 
                 await transaction.request().input('bookid',sql.VARCHAR(30),bookId).input('borrowdate', sql.Date,currentDate)
-                .input('duedate', sql.Date,dueDate).input('returndate',sql.Date, null).query(`
-                  INSERT INTO Action (bookid, personid, borrowdate, duedate, returndate)
-                  VALUES (@bookid,${uId},@borrowdate, @duedate ,@returndate)
+               .input('returndate',sql.Date, null).query(`
+                  INSERT INTO Action (bookid, personid, borrowdate, returndate)
+                  VALUES (@bookid,${uId},@borrowdate ,@returndate)
                 `);
 
                 console.log("transaction -inserted")
@@ -101,7 +101,7 @@ app.use(bodyParser.urlencoded({extended: false}));
                   SELECT TOP (1) transactionid, bookid FROM Action ORDER BY transactionid DESC
                 `);
                 await transaction.commit()
-                    res.send(`your transaction ID is ${getTransactionId.recordset[0].transactionid} and book id is ${getTransactionId.recordset[0].bookid} keep it secure , you wont be able to return it without these info`);
+                    res.send(`your transaction ID is ${getTransactionId.recordset[0].transactionid} and book id is ${getTransactionId.recordset[0].bookid} please keep it secure , you won't be able to return it without these info`);
             }
             catch (error) {
               await transaction.rollback()
@@ -206,7 +206,7 @@ app.use(bodyParser.urlencoded({extended: false}));
           query = query + ` and genre = '${genre}'`;
         }
         
-        query += "and quantity > 0"
+        // query += "and quantity > 0"
         // Connect to the database
         await sql.connect(config);
     
