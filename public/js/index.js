@@ -86,19 +86,17 @@ $(document).ready(() => {
               const bookImage = random_item(randomBookImages);
               bookHtml += '<div class="card book " data-book-id="'+ books[i].bookid + '">';
               bookHtml += `<img src="img/books/${bookImage}" class="card-img-top" alt="Herper LEE">`;
-              bookHtml += '<div class="card-body">'
+              // bookHtml += '<div class="card-body">'
 
               bookHtml += '<h3 class = "card-title">'+ books[i].bookName + '</h3>';
-              bookHtml += '<div class="bookDescr"> ';
-              bookHtml += `<p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p> `
-
+             
               bookHtml += '<p>Author:<span>'+books[i].author+'</span></p>'; 
               bookHtml += '<p>Genre:<span>'+books[i].genre+'</span></p>';
               bookHtml += '<p>Rating:<span>'+books[i].rating+'</span></p>';
               var quantity = books[i].quantity - 2 
-              bookHtml += '<p>Available Quantity:<span>'+quantity +'</span></p></div>';
+              bookHtml += '<p>Available Quantity:<span>'+quantity +'</span></p>';
               if(books[i].quantity > 2){
-                bookHtml += '<button class=" brw btn btn-green">Borrow </button> </div></div>';
+                bookHtml += '<button class=" brw btn btn-green">Borrow </button> </div>';
               }
              else{
                 bookHtml += '<button class =" btn btn-grey">Out of Stock</button></div></div>';
@@ -144,7 +142,9 @@ $(document).ready(() => {
         "bookId":bookId
       },
       success: function(response) {
-        alert(response)
+        Swal.fire(
+          response
+        )
         searchBooks()
       }
     

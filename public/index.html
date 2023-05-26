@@ -28,6 +28,7 @@
         <div class="col-12">
           <nav>
             <ul >
+              <li onClick="window.location.reload()">Home </li>
               <li onclick="openForm()">ReturnBook</li>
             </ul>
           </nav>
@@ -79,7 +80,7 @@
       <h1 class="ret-header"> Return Book </h1>
       <div class="labelWrapper">
         <label for="tid">
-          <input type="text" placeholder="Enter transaction" name="tid" - required>
+          <input type="text" placeholder="Enter transaction id " name="tid" - required>
         </label>
         <label for="bid">
           <input type="text" placeholder="Enter Bookid" name="bid" - required>
@@ -93,16 +94,24 @@
 
 
   <div class="form-popup bookLook" id="borrow-form">
-    <form  class="form-container borrow-form">
-      <h1 class="ret-header"> Borrow Book </h1>
-      <label for = "uid">
-        <input type = "text" placeholder = "Enter your Id" id = "uid" name="uid" - required> 
-      </label>
+    <form  class="form-container borrow-book-form">
+      <h2 class="ret-header">
+        Borrow Book <br>
+        <span id="borrowBookName"></span>
+      </h2>
+
+      <!-- bookName, edition, language, year, bookid, rating, genre,author  --- quantity -->
+
+      <!-- personid -->
+      <div class="labelWrapper">
+        <label for = "uid" class = "w-100">
+          <input type = "text" placeholder = "Enter your User Id" id = "uid" name="uid" - required> 
+        </label>
+      </div>
       <button type = "button" class = "btn  btn-green" id = "brrBtn" > Borrow</button>
       <button type="button" class="btn btn-brown" onclick="closeBrrForm()">Close</button>
     </form>
   </div>
-
   
 
   <footer>
@@ -121,7 +130,9 @@
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-  <script src = "index.js"> </script>
+  <script src = "js/index.js"> </script>
+  <script src="js/jquery-3.6.0.min.js"></script>
+  <script src="js/sweetalert2.js"></script>
  
 
 </body>
