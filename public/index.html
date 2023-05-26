@@ -27,11 +27,7 @@
       <div class="row">
         <div class="col-12">
           <nav>
-            <ul>
-              <li><a href="#">Home</a></li>
-              <li><a href="#">Books</a></li>
-              <li><a href="#">Magazines</a></li>
-              <li> OutofStock </li>
+            <ul >
               <li onclick="openForm()">ReturnBook</li>
             </ul>
           </nav>
@@ -59,7 +55,7 @@
               <option value="Fantasy">Fantasy</option>
               <option value="Fantasy">Dystopian</option>
             </select>
-            <input type="submit" value="Search" id="searchBtn">
+            <input type="submit" value="Search" id="searchBtn" class="btn-brown">
           </div>
         </div>
        
@@ -77,30 +73,37 @@
     </div>
   </main>
 
-  <div class = "form-popup" id = "borrow-form"> 
-    <form class = "form-container"> 
+
+  <div class="form-popup bookLook" id="return-form">
+    <form action="/return" method="post" class="form-container return-form">
+      <h1 class="ret-header"> Return Book </h1>
+      <div class="labelWrapper">
+        <label for="tid">
+          <input type="text" placeholder="Enter transaction" name="tid" - required>
+        </label>
+        <label for="bid">
+          <input type="text" placeholder="Enter Bookid" name="bid" - required>
+        </label>
+      </div>
+
+      <button type="submit" class="btn btn-green" id="ret-btn"> Return</button>
+      <button type="button" class="btn btn-brown" onclick="closeForm()">Close</button>
+    </form>
+  </div>
+
+
+  <div class="form-popup bookLook" id="borrow-form">
+    <form  class="form-container borrow-form">
       <h1 class="ret-header"> Borrow Book </h1>
       <label for = "uid">
         <input type = "text" placeholder = "Enter your Id" id = "uid" name="uid" - required> 
       </label>
-      <button type = "button" class = "btn" id = "brrBtn" > Borrow</button>
-      <button type="button" class="btn cancel" onclick="closeBrrForm()">Close</button>
-  </form>
-  </div>
-
-  <div class="form-popup" id="return-form">
-    <form action="/return" method="post" class="form-container">
-      <h1 class="ret-header"> Return Book </h1>
-      <label for="tid">
-        <input type="text" placeholder="Enter transaction" name="tid" - required>
-      </label>
-      <label for="bid">
-        <input type="text" placeholder="Enter Bookid" name="bid" required>
-      </label>
-      <button type="submit" class="btn " id="ret-btn"> Return</button>
-      <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
+      <button type = "button" class = "btn  btn-green" id = "brrBtn" > Borrow</button>
+      <button type="button" class="btn btn-brown" onclick="closeBrrForm()">Close</button>
     </form>
   </div>
+
+  
 
   <footer>
     <div class="container">

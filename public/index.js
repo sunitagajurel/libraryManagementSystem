@@ -1,8 +1,19 @@
 
+const randomBookImages = [
+  "flat-tree.jpeg",
+  "defaultBook.jpeg",
+  "strangeBook.jpeg",
+  "potter.jpeg"
+];
+
+function random_item(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
 
 function onPageLoad(){
     searchBooks()
 }
+
 //keeps track of clicked bookId 
 bookId = null
 
@@ -72,33 +83,31 @@ $(document).ready(() => {
           var books = response;
           var bookHtml = '';
           for (let i = 0; i < books.length; i++) {
-              bookHtml += '<div class="card book " data-book-id="' + books[i].bookid + '">';
-              bookHtml += '<img src="img/flat-tree.jpeg" class="card-img-top" alt="Herper LEE">';
+              const bookImage = random_item(randomBookImages);
+              bookHtml += '<div class="card book " data-book-id="'+ books[i].bookid + '">';
+              bookHtml += `<img src="img/books/${bookImage}" class="card-img-top" alt="Herper LEE">`;
               bookHtml += '<div class="card-body">'
 
               bookHtml += '<h3 class = "card-title">'+ books[i].bookName + '</h3>';
-              bookHtml += '<div class="bookDescr">';
-              bookHtml += '<p>Author:<span>'+books[i].bookName +'</span></p>'; 
+              bookHtml += '<div class="bookDescr"> ';
+              bookHtml += `<p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p> `
+
+              bookHtml += '<p>Author:<span>'+books[i].author+'</span></p>'; 
               bookHtml += '<p>Genre:<span>'+books[i].genre+'</span></p>';
               bookHtml += '<p>Rating:<span>'+books[i].rating+'</span></p>';
-              var quantity = books[i].quantity -1 
+              var quantity = books[i].quantity - 2 
               bookHtml += '<p>Available Quantity:<span>'+quantity +'</span></p></div>';
-              if(books[i].quantity > 1){
-                bookHtml += '<button class=" brw btn btn-primary">Borrow </button> </div></div>';
+              if(books[i].quantity > 2){
+                bookHtml += '<button class=" brw btn btn-green">Borrow </button> </div></div>';
               }
              else{
-                bookHtml += '<button class =" btn btn-secondary">Out of Stock</button></div></div>';
+                bookHtml += '<button class =" btn btn-grey">Out of Stock</button></div></div>';
               }
-
-            //   bookHtml += '<p>Author: ' + books[i].author + '</p>';
-            //   bookHtml += '<p>Genre: ' + books[i].genre + '</p>';
-            //   bookHtml += '<p>Rating: ' + books[i].rating + '</p>';
-            //   bookHtml += `<button  class="brw">Borrow </button> </div> `;
           }
         }
         
         $('#stockBooks').html(bookHtml);
-        console.log("jhkhjhj")
+        
       },
       error: function(xhr, status, error) {
         console.error('Error:', error);
@@ -135,8 +144,8 @@ $(document).ready(() => {
         "bookId":bookId
       },
       success: function(response) {
-
         alert(response)
+        searchBooks()
       }
     
   })

@@ -51,11 +51,6 @@ VALUES
  (9,2),
  (10,0);
 
-
-
-
-
-
 /*Action table */
 CREATE TABLE Action
 (transactionid INT PRIMARY KEY IDENTITY(1,1), 
@@ -81,7 +76,6 @@ VALUES ('9780062420701'	,1,'2023-05-25',NULL),
 
 
 /*function to check books availability */
-
 CREATE FUNCTION BookExists(@bookID VARCHAR(30))
 RETURNS BIT
 AS
