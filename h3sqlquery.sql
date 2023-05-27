@@ -20,7 +20,7 @@ VALUES
     ('The Hobbit', 'First Edition', 'English', 1937, '9780007497904', 4.2, 'Fantasy', 'J.R.R.Tolkien',5),
     ('Harry Potter and the Philosopher''s Stone', 'First Edition', 'English', 1997, '9780747532699', 4.5, 'Fantasy','J.K. Rowling',15),
     ('Alice in Wonderland', 'Revised Edition', 'English', 1865, '9781503290283', 4.1, 'Fantasy','Lewis Carroll',18),
-    ('The Chronicles of Narnia', 'Complete Collection', 'English', 1950, '9780064404990', 4.6, 'Fantasy','Author: C.S. Lewis',10),
+    ('The Chronicles of Narnia', 'Complete Collection', 'English', 1950, '9780064404990', 4.6, 'Fantasy','C.S. Lewis',10),
     ('Pride and Prejudice', 'Revised Edition', 'English', 1813, '9780141439518', 4.7, 'Classic','Jane Austen',15),
     ('To Kill a Mockingbird', 'First Edition', 'English', 1960, '9780062420701', 4.5, 'Fiction','Harper Lee',16),
     ('The Great Gatsby', 'First Edition', 'English', 1925, '9780743273565', 4.2, 'Classic','F. Scott Fitzgerald',18),
@@ -28,7 +28,7 @@ VALUES
     ('The Catcher in the Rye', 'First Edition', 'English', 1951, '9780316769488', 4.0, 'Fiction','J.D. Salinger',20),
     ('Moby-Dick', 'Revised Edition', 'English', 1851, '9781503280789', 4.4, 'Adventure',' Herman Melville',20);
 
-
+Update Book set quantity = 3 where bookid = '9781503280789';
 /*Creating table to store person details */CREATE TABLE Person (personid INT PRIMARY KEY, email CHAR(200));
 
 /*Inserting Records in pErson table*/INSERT INTO Person (personid,email)VALUES    (1, 'johndoe@example.com'),    (2, 'janesmith@example.com'),    (3, 'michaeljohnson@example.com'),    (4, 'emilydavis@example.com'),    (5, 'davidwilson@example.com'),    (6, 'sarahbrown@example.com'),    (7, 'christopherlee@example.com'),    (8, 'oliviataylor@example.com'),    (9, 'danielanderson@example.com'),    (10,'sophiamartinez@example.com');

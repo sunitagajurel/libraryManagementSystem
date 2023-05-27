@@ -11,9 +11,15 @@ body {
 .bookLook {
   border-radius: 0 16px 16px 0;
 }
-.book{
+/* .book{
   margin-top:10px;
   padding:20px;
+} */
+.card_body{
+  display:flex;
+  flex-direction: column;
+  padding:10px;
+  margin-top: 5px;
 }
 
 .btn-brown {
@@ -30,11 +36,13 @@ body {
   background-color:gainsboro;
 
 }
+.buttons{
+  display: flex;
+  /* align-items: center;
+  justify-content: center; */
+  padding :10px;
+}
 
- .test{
-  display: flex; 
-
- }
 
 .btn-green {
   background-color: var(--main-green);
@@ -130,7 +138,7 @@ main .title {
 }
 
 .booksList .book .card-img-top{
-  height: 180px;
+  height: 150px;
   object-fit: cover;
   object-position: top;
 }
