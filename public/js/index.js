@@ -114,23 +114,6 @@ $(document).ready(() => {
     });
   }
   
-//   <div class="card book">
-//               <img src="img/flat-tree.jpeg" class="card-img-top" alt="Herper LEE">
-//               <div class="card-body">
-//                 <h3 class="card-title">Card title</h3>
-            //     <div class="bookDescr">
-                 
-            //       <p>Author: <span>Harper Lee</span></p>
-            //       <p>Genre: <span>Fiction</span></p>
-            //       <p>Rating: <span>4.5</span></p>
-            //     </div>
-            //     <a href="#" class="btn btn-primary">Borrow</a>
-            //   </div>
-            // </div>
-
-
-
-
   function Authorise(bookId,uId){
     console.log(bookId,uId)
     closeBrrForm()
