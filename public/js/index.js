@@ -6,10 +6,13 @@ const randomBookImages = [
   "potter.jpeg"
 ];
 
+//get random images 
+
 function random_item(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
+//reload  page with all contents from database 
 function onPageLoad(){
     searchBooks()
 }
@@ -114,8 +117,8 @@ $(document).ready(() => {
     });
   }
   
+  //checks authorised user before borrowing 
   function Authorise(bookId,uId){
-    console.log(bookId,uId)
     closeBrrForm()
 
        $.ajax({
