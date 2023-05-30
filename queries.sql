@@ -29,7 +29,6 @@ VALUES
     ('The Catcher in the Rye', 'First Edition', 'English', 1951, '9780316769488', 4.0, 'Fiction','J.D. Salinger',20),
     ('Moby-Dick', 'Revised Edition', 'English', 1851, '9781503280789', 4.4, 'Adventure',' Herman Melville',20);
 
-Update Book set quantity = 3 where bookid = '9781503280789';
 /*Creating table to store person details */
 CREATE TABLE Person 
 (personid INT PRIMARY KEY,
