@@ -14,7 +14,7 @@ This will install all the required libraries like (mssql,express js ) to run the
 
 Create Database in MicroSoft Azure : https://docs.microsoft.com/en-us/learn/modules/provision-azure-sql-db/Links to an external site.
 
-Run all the queries given in the queries.sql file 
+Run all the queries given in the queries.sql file  in Microsft SQL in Azure
 
 create .env file with following contents in the root folder, give all the details from your azure sql database : 
 
