@@ -1,5 +1,6 @@
-CREATE DATABASE LIBRARY ;
-USE LIBRARY ;
+-- not needed for Microsoft SQL 
+-- CREATE DATABASE LIBRARY ;
+-- USE LIBRARY ;
 
 /*Creating table to store book details */
 CREATE TABLE Book (
@@ -29,13 +30,48 @@ VALUES
     ('Moby-Dick', 'Revised Edition', 'English', 1851, '9781503280789', 4.4, 'Adventure',' Herman Melville',20);
 
 Update Book set quantity = 3 where bookid = '9781503280789';
-/*Creating table to store person details */CREATE TABLE Person (personid INT PRIMARY KEY, email CHAR(200));
+/*Creating table to store person details */
+CREATE TABLE Person 
+(personid INT PRIMARY KEY,
+ email CHAR(200));
 
-/*Inserting Records in pErson table*/INSERT INTO Person (personid,email)VALUES    (1, 'johndoe@example.com'),    (2, 'janesmith@example.com'),    (3, 'michaeljohnson@example.com'),    (4, 'emilydavis@example.com'),    (5, 'davidwilson@example.com'),    (6, 'sarahbrown@example.com'),    (7, 'christopherlee@example.com'),    (8, 'oliviataylor@example.com'),    (9, 'danielanderson@example.com'),    (10,'sophiamartinez@example.com');
+/*Inserting Records in pErson table*/
+INSERT INTO Person (personid,email)
+VALUES
+    (1, 'johndoe@example.com'),
+    (2, 'janesmith@example.com'),
+    (3, 'michaeljohnson@example.com'),
+    (4, 'emilydavis@example.com'),
+    (5, 'davidwilson@example.com'),
+    (6, 'sarahbrown@example.com'),
+    (7, 'christopherlee@example.com'),
+    (8, 'oliviataylor@example.com'),
+    (9, 'danielanderson@example.com'),
+    (10,'sophiamartinez@example.com');
 
-/*Userinfo table*/ CREATE TABLE Userinfo (email CHAR(200) PRIMARY KEY, Personname CHAR(50) NOT NULL ); /*Inserting Records*/INSERT INTO Userinfo ( email, personname)VALUES    ('johndoe@example.com', 'John Doe'),    ('janesmith@example.com', 'Jane Smith'),    ('michaeljohnson@example.com', 'Michael Johnson'),    ('emilydavis@example.com', 'Emily Davis'),    ('davidwilson@example.com', 'David Wilson'),    ('sarahbrown@example.com', 'Sarah Brown'),    ('christopherlee@example.com', 'Christopher Lee'),    ('oliviataylor@example.com', 'Olivia Taylor'),    ('danielanderson@example.com', 'Daniel Anderson'),    ('sophiamartinez@example.com', 'Sophia Martinez');
+/*Userinfo table*/
+ CREATE TABLE Userinfo 
+(email CHAR(200) PRIMARY KEY,
+ Personname CHAR(50) NOT NULL );
 
-/*Fine table*/CREATE table Fine(transactionid INT PRIMARY KEY,  fineamt DECIMAL);
+ /*Inserting Records*/
+INSERT INTO Userinfo ( email, personname)
+VALUES
+    ('johndoe@example.com', 'John Doe'),
+    ('janesmith@example.com', 'Jane Smith'),
+    ('michaeljohnson@example.com', 'Michael Johnson'),
+    ('emilydavis@example.com', 'Emily Davis'),
+    ('davidwilson@example.com', 'David Wilson'),
+    ('sarahbrown@example.com', 'Sarah Brown'),
+    ('christopherlee@example.com', 'Christopher Lee'),
+    ('oliviataylor@example.com', 'Olivia Taylor'),
+    ('danielanderson@example.com', 'Daniel Anderson'),
+    ('sophiamartinez@example.com', 'Sophia Martinez');
+
+/*Fine table*/
+CREATE table Fine
+(transactionid INT PRIMARY KEY, 
+ fineamt DECIMAL);
 
  /* insert Recors for fine table */ 
  insert into fine (transactionid,fineamt) 
@@ -111,7 +147,24 @@ END;
 GO
 
 /*Trigers when book returned past 30 days of borrowdate */
-CREATE TRIGGER CalculateFineTriggerON ActionAFTER UPDATEASBEGIN    -- Check if the returndate is updated    IF UPDATE(returndate)    BEGIN        -- Insert into the Fine table for each updated row that meets the condition        INSERT INTO Fine (transactionid, fineamt)        SELECT i.transactionid,             CASE WHEN DATEDIFF(day, i.borrowdate, i.returndate) > 30                 THEN DATEDIFF(day, i.borrowdate, i.returndate) - 30                 ELSE 0            END AS fineamt        FROM inserted i        INNER JOIN Action a ON i.transactionid = a.transactionid;    END;END;
+CREATE TRIGGER CalculateFineTrigger
+ON Action
+AFTER UPDATE
+AS
+BEGIN
+    -- Check if the returndate is updated
+    IF UPDATE(returndate)
+    BEGIN
+        -- Insert into the Fine table for each updated row that meets the condition
+        INSERT INTO Fine (transactionid, fineamt)
+        SELECT i.transactionid, 
+            CASE WHEN DATEDIFF(day, i.borrowdate, i.returndate) > 30
+                 THEN DATEDIFF(day, i.borrowdate, i.returndate) - 30
+                 ELSE 0
+            END AS fineamt
+        FROM inserted i
+        INNER JOIN Action a ON i.transactionid = a.transactionid;
+    END;
+END;
 
-select * from action ;
 

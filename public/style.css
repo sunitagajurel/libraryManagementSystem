@@ -11,10 +11,7 @@ body {
 .bookLook {
   border-radius: 0 16px 16px 0;
 }
-/* .book{
-  margin-top:10px;
-  padding:20px;
-} */
+
 .card_body{
   display:flex;
   flex-direction: column;
