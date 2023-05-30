@@ -10,6 +10,7 @@ install nodejs
 cd libraryManagementSystem 
 
 `npm install` 
+This will install all the required libraries like (mssql,express js ) to run the project in the local
 
 Create Database in MicroSoft Azure : https://docs.microsoft.com/en-us/learn/modules/provision-azure-sql-db/Links to an external site.
 
